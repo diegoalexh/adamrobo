@@ -44,13 +44,15 @@ const heroesAPI={
 	},
 	destroy(patient){
 		return new Promise((resolve,reject)=> {
-			fetch(`${baseUrl}/patient/${patient.id}`,{
+			fetch(`${baseUrl}/patient/${patient._id}`,{
 					method: 'DELETE'
 			})
 			.then(result => result.json())
 			.then(json=>{resolve(json)})
 			.catch(err=> {reject(err)});
 		});}
+
+	
 }
 
 export default heroesAPI

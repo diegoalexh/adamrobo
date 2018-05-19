@@ -17,8 +17,8 @@ function get(req,res){
 	});
 }
 function create(req,res){
-	const {id, name, score} = req.body;
-	const patient = new Patient({id,name,score})
+	const { name, score} = req.body;
+	const patient = new Patient({name,score})
 	patient
 	.save()
 	.then(() => {
@@ -28,9 +28,9 @@ function create(req,res){
 	})
 }
 function update(req,res){
-	const {id, name, score} = req.body;
+	const {_id, name, score} = req.body;
 
-	Patient.findOne({id})
+	Patient.findOne({_id})
 	.then(patient => {
 		patient.name = name;
 		patient.score = score;
@@ -41,8 +41,9 @@ function update(req,res){
 	});
 }
 function destroy(req,res){
-	const {id} = req.params;
-	Patient.findOneAndRemove({id})
+	const {_id} = req.params;
+	console.log('deleting ', _id);
+	Patient.findOneAndRemove({id: _id})
 	.then(patient=>{
 		res.json(patient);
 	})

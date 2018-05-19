@@ -23,4 +23,4 @@ yarn-error.log*
 
 
 #Secret Stuff
-environment/*
+environment/environment.js
