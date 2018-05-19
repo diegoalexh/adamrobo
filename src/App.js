@@ -10,6 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+
+
 const theme = createMuiTheme({
   palette: {
     primary: { main: red[800] }, // Purple and green play nicely together.
@@ -36,15 +38,16 @@ class App extends Component {
       <div>
       <AppBar position="static">
         <Toolbar>
-          <IconButton className={styles.menuButton} color="inherit" aria-label="Menu">
+          <IconButton color="inherit" aria-label="Menu">
             <MenuIcon />
           </IconButton>
-          <Typography variant="title" color="inherit" className={styles.flex}>
-            Adam Robo Center
+          <Typography variant="title" color="inherit" >
+            Adam Robo Center - Atribuição de Resultados
           </Typography>
         
         </Toolbar>
       </AppBar>
+          
       	<PatientTable/>
       </div>
      </MuiThemeProvider>

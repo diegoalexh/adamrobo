@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
+import WebcamCapture from './WebcamCapture';
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -31,8 +33,13 @@ constructor(){
 	this.handleSave = this.handleSave.bind(this)
 	this.handleDelete = this.handleDelete.bind(this)
 	this.handleEnableAddMode = this.handleEnableAddMode.bind(this)
+	this.handleImageReady = this.handleImageReady.bind(this)
+	this.handleAnalysisRequest = this.handleAnalysisRequest.bind(this)
 }
 
+handleAnalysisRequest(event, patient){
+	console.log(patient.image)
+}
 handleEnableAddMode(){
 	this.setState({adding: true, selectedPatient: { name: '', score: ''}})
 }
@@ -67,20 +74,27 @@ handleSave(){
 
 }
 handleChange(event){
-	
 	let selectedPatient = this.state.selectedPatient;
 	selectedPatient[event.target.name] = event.target.value;
 	this.setState({selectedPatient: selectedPatient})
 }
 handleSelect(patient){
 	console.log('select')
+	this.setState({selectedPatient: null})
 	this.setState({selectedPatient: patient})
-
 }
 
 handleCancel(){
 	console.log('cancel')
 	this.setState({selectedPatient: null, adding:false})
+}
+
+handleImageReady(imgSrc){
+	if(this.state.selectedPatient){
+			let selectedPatient = this.state.selectedPatient;
+			selectedPatient['image'] = imgSrc;
+			this.setState({selectedPatient: selectedPatient})
+	}
 }
 
 componentDidMount(){
@@ -91,27 +105,15 @@ componentDidMount(){
 
 render(){
 
-	const EmptyMessage = () => {
-			return  <Grid item md={12}>
-				 		<Typography variant="display1" >
-      						Não existem teste ainda
-      					</Typography>
-
-				 </Grid>
-
-	}
+	
 
 	return (
 				<Grid container style={{padding: '12px'}}>
-				 <Typography variant="display3" gutterBottom>
-      				 Lista de Testes
-      			</Typography>
+						
+				<WebcamCapture onImageReady={this.handleImageReady} original={this.state.selectedPatient}/>
 				<Button color="primary" onClick={this.handleEnableAddMode}> Novo Teste</Button>
-
-
-				{this.state.patients.length == 0 ? <EmptyMessage/> : '' }
-				 <Grid container className={styles.root} spacing={16}>
-				  <Grid item xs={12} md={6}>
+				<Grid container className={styles.root} spacing={16}>
+				<Grid item xs={12} md={6}>
 				<EditPatient 
 					onCancel={this.handleCancel}
 					onChange={this.handleChange} 
@@ -125,6 +127,7 @@ render(){
 									patient={patient} 
 									onSelect={this.handleSelect} 
 									onDelete={this.handleDelete}
+									onAnalysisRequest={this.handleAnalysisRequest}
 									/>
 								} )			
 							}

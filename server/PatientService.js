@@ -3,7 +3,7 @@ const Patient = require('./PatientModel');
 const ReadPreference = require('mongodb').ReadPreference;
 
 
-require('./mongo').connect();
+var db = require('./mongo').connect();
 
 function get(req,res){
 	const docquery = Patient.find({}).read(ReadPreference.NEAREST);
@@ -17,8 +17,8 @@ function get(req,res){
 	});
 }
 function create(req,res){
-	const { name, score} = req.body;
-	const patient = new Patient({name,score})
+	const { name, score, image} = req.body;
+	const patient = new Patient({name,score,image})
 	patient
 	.save()
 	.then(() => {
@@ -28,12 +28,13 @@ function create(req,res){
 	})
 }
 function update(req,res){
-	const {_id, name, score} = req.body;
+	const {_id, name, score, image} = req.body;
 
 	Patient.findOne({_id})
 	.then(patient => {
 		patient.name = name;
 		patient.score = score;
+		patient.image = image;
 		patient.save().then(res.json(patient))
 	})
 	.catch(err => {
@@ -51,6 +52,35 @@ function destroy(req,res){
 		res.status(500).send(err);
 	});
 }
+
+function storeImage(req,res){
+   var mongoDriver = db.mongo;
+   console.log(db)
+   var gfs = new Gridfs(db, mongoDriver);
+   var writestream = gfs.createWriteStream({
+     filename: req.files.file.name,
+     mode: 'w',
+     content_type: req.files.file.mimetype,
+     metadata: req.body
+   });
+   fs.createReadStream(req.files.file.path).pipe(writestream);
+   writestream.on('close', function(file) {
+      User.findById(req.params.id, function(err, user) {
+        // handle error
+        user.file = file._id;
+        user.save(function(err, updatedUser) {
+          // handle error
+          return res.json(200, updatedUser)
+        })
+      });
+      fs.unlink(req.files.file.path, function(err) {
+        // handle error
+        console.log('success!')
+      });
+   });
+}
+
+
 module.exports = {
 	get,create, update, destroy
 };

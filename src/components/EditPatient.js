@@ -3,29 +3,30 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
-import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-const styles = theme => ({
-  button: {
-    margin: theme.spacing.unit,
-  },
-  input: {
-    display: 'none',
-  },
-});
-const EditHero = (props) => {
+import moment from 'moment'
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+
+const EditPatient = (props) => { 
 
 if (props.selectedPatient){
     return (
-	<div> 
-	 
-		<FormControl >
+	<div style={{textAlign: 'center'}}> 
+
+      <Card style={{padding: '16px'}}>
+		    <FormControl >
           <InputLabel htmlFor="name">Nome</InputLabel>
           <Input name="name"  value={props.selectedPatient.name}  onChange={props.onChange} />
         </FormControl>
         <FormControl >
           <InputLabel htmlFor="score">Score</InputLabel>
           <Input name="score" value={props.selectedPatient.score} onChange={props.onChange} />
+        </FormControl>
+         <FormControl disabled >
+          <InputLabel htmlFor="score">Imagem</InputLabel>
+          <Input name="image" value={props.selectedPatient.image ? 'Capurada!' : ''}  />
         </FormControl>
         <input
         accept="image/*"
@@ -34,13 +35,13 @@ if (props.selectedPatient){
         multiple
         type="file"
       />
-      <label htmlFor="raised-button-file">
-        <Button variant="raised" component="span" className={styles.button}>
-          Upload
-        </Button>
-      </label>
+      <CardActions style={{textAlign: 'center'}} disableActionSpacing>
 		<Button onClick={()=> props.onSave(props.selectedPatient)} color="primary" variant="raised"> Salvar</Button>
 		<Button onClick={()=> props.onCancel()}> Cancelar</Button>
+</CardActions>
+    <small>{ moment(props.selectedPatient.created).format('h:mm:ss a')  }</small>
+</Card>
+      
 	</div>
 
     	);
@@ -55,4 +56,4 @@ if (props.selectedPatient){
 
 }
 
-export default withStyles(styles)(EditHero);
+export default (EditPatient);

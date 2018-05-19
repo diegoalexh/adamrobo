@@ -1,4 +1,4 @@
-const baseUrl = '/api';
+	const baseUrl = '/api';
 
 const heroesAPI={
 	get(){
