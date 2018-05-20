@@ -22,7 +22,7 @@ export default class WebcamCapture extends React.Component {
  
   render() {
     return (
-                <div style={{textAlign:'center', position:'relative'}}>
+                <div style={{textAlign:'center', position:'relative', margin: '16px'}}>
                   <Webcam className="video"
                   audio={false}
                   height={350}

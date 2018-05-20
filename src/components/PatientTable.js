@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import WebcamCapture from './WebcamCapture';
-
+import Snackbar from '@material-ui/core/Snackbar';
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -26,7 +26,7 @@ class PatientTable extends Component {
 
 constructor(){
 	super();
-	this.state = {patients: []};
+	this.state = {patients: [], open_snack: false};
 	this.handleSelect = this.handleSelect.bind(this)
 	this.handleCancel = this.handleCancel.bind(this)
 	this.handleChange = this.handleChange.bind(this)
@@ -38,10 +38,21 @@ constructor(){
 }
 
 handleAnalysisRequest(event, patient){
-	console.log(patient.image)
+	console.log(patient)
+	heroesAPI.sendFormAnalysis(patient).then(resp=>{
+		let p = patient;
+		p.cv_result = resp;
+		this.state.patients.push(p)
+		heroesAPI.update(p).then(resp2 => {
+					console.log("Update result " + resp2)
+					this.setState({	selectedPatient: null})
+		})
+	})
 }
+
+
 handleEnableAddMode(){
-	this.setState({adding: true, selectedPatient: { name: '', score: ''}})
+	this.setState({adding: true, selectedPatient: { name: '', email: '',image:null}})
 }
 handleDelete(event, patient){
 	console.log(patient._id)
@@ -119,6 +130,8 @@ handleImageReady(imgSrc){
 			let selectedPatient = this.state.selectedPatient;
 			selectedPatient['image'] = imgSrc;
 			this.setState({selectedPatient: selectedPatient})
+	}else{
+    		this.setState({ open_snack: true });
 	}
 }
 
@@ -127,38 +140,47 @@ componentDidMount(){
 		this.setState({patients: json})
 	})
 }
-
+handleClose = () => {
+    this.setState({ open_snack: false });
+  };
 render(){
 
 	
 
 	return (
-				<Grid container style={{padding: '12px'}}>
-				<Grid item md={3}>
-					<WebcamCapture onImageReady={this.handleImageReady} />
-					<Button style={{width: '100%'}} color="secondary" variant="raised" onClick={this.handleEnableAddMode}> Novo Teste</Button>
-				</Grid>
-				<Grid item xs={12} md={9}>
-								<EditPatient 
-								onCancel={this.handleCancel}
-								onChange={this.handleChange} 
-								selectedPatient={this.state.selectedPatient}
-								onSave={this.handleSave}/>
-				</Grid>
-					<Grid container className={styles.root} spacing={16}>
-	       					 <Grid item xs={12} md={12}>
-								{
-									this.state.patients.map((patient,index) =>{
-										return <Patient key={index}
-										patient={patient} 
-										onSelect={this.handleSelect} 
-										onDelete={this.handleDelete}
-										onAnalysisRequest={this.handleAnalysisRequest}
-										/>
-									} )			
-								}
-						 	</Grid>
+				<Grid container style={{padding: '12px'}} justify="center" alignItems="center">
+					<Grid item md={3}  >
+						<WebcamCapture onImageReady={this.handleImageReady} />
 					</Grid>
+					<Grid item xs={12} md={9} style={{textAlign: 'center'}} >
+							{this.state.selectedPatient ? <EditPatient 
+									onCancel={this.handleCancel}
+									onChange={this.handleChange} 
+									selectedPatient={this.state.selectedPatient}
+									onSave={this.handleSave}/> : <Button color="secondary" variant="raised" onClick={this.handleEnableAddMode}> Novo Teste</Button>}
+					</Grid>
+		       		<Grid item xs={12} md={12}>
+									{
+										this.state.patients.map((patient,index) =>{
+											return <Patient key={index}
+											patient={patient} 
+											onSelect={this.handleSelect} 
+											onDelete={this.handleDelete}
+											onAnalysisRequest={this.handleAnalysisRequest}
+											/>
+										} )			
+									}
+					</Grid>
+					 <Snackbar
+				          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+				          open={this.state.open_snack}
+				          autoHideDuration={6000}
+				           onClose={this.handleClose}
+				          ContentProps={{
+				            'aria-describedby': 'message-id',
+				          }}
+				          message={<span id="message-id">Abra um teste ou crie um novo para capturar uma fotografia</span>}
+				        />
 				</Grid>
 	)
 }

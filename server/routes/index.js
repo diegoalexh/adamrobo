@@ -22,4 +22,10 @@ router.get("/images/:_id", function(req, res){
   patientService.getImage(req,res);
  });
 
+router.get("/analyze/image/:_id", function(req, res){ 
+  patientService.analyzeImage(req, res);
+});
+
+
+
 module.exports = router;

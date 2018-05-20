@@ -13,7 +13,7 @@ const EditPatient = (props) => {
 
 if (props.selectedPatient){
   return (
-	<div style={{textAlign: 'center'}}> 
+	<div style={{textAlign: 'center',height: '100%'}}> 
       <Card style={{padding: '16px'}}>
           <Typography variant="title" color="inherit" >
            {props.selectedPatient._id ? 'Editar Teste' : 'Adicionar Teste'} 
@@ -23,10 +23,10 @@ if (props.selectedPatient){
           <Input name="name"  value={props.selectedPatient.name}  onChange={props.onChange} />
         </FormControl>
         <FormControl style={{margin: '16px'}} >
-          <InputLabel htmlFor="score">Score</InputLabel>
-          <Input name="score" value={props.selectedPatient.score} onChange={props.onChange} />
+          <InputLabel htmlFor="score">Email</InputLabel>
+          <Input name="email" value={props.selectedPatient.email} onChange={props.onChange} />
         </FormControl>
-          {props.selectedPatient.image ?  <img  height={100}  src={ props.selectedPatient.image }/> : <img  height={100}  src={'http://localhost:3001/api/images/' +  props.selectedPatient.image_ref }/> } 
+          {props.selectedPatient.image ?  <img  height={100}  src={ props.selectedPatient.image }/> : (props.selectedPatient.image_ref ? <img  height={100}  src={'http://localhost:3001/api/images/' +  props.selectedPatient.image_ref }/> : '') } 
 		<br/><br/><Button onClick={()=> props.onSave(props.selectedPatient)} color="primary" variant="raised">  {props.selectedPatient._id ? 'Atualizar' : 'Salvar'} </Button>
 		<Button onClick={()=> props.onCancel()}> Cancelar</Button>
   

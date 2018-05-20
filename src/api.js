@@ -1,4 +1,4 @@
-	const baseUrl = '/api';
+const baseUrl = '/api';
 
 const heroesAPI={
 	get(){
@@ -50,7 +50,8 @@ const heroesAPI={
 			.then(result => result.json())
 			.then(json=>{resolve(json)})
 			.catch(err=> {reject(err)});
-		});},
+		});
+	},
 
 	storeImage(patient){
 		return new Promise((resolve,reject)=> {
@@ -61,6 +62,16 @@ const heroesAPI={
 						'Content-Type': 'application/json'
 					}
 			})
+			.then(result => result.json())
+			.then(json=>{resolve(json)})
+			.catch(err=> {reject(err)});
+		});
+
+
+	},
+	sendFormAnalysis(patient){
+		return new Promise((resolve,reject)=> {
+			fetch(`${baseUrl}/analyze/image/${patient.image_ref}`)
 			.then(result => result.json())
 			.then(json=>{resolve(json)})
 			.catch(err=> {reject(err)});

@@ -1,8 +1,8 @@
 const Patient = require('./PatientModel');
 const ReadPreference = require('mongodb').ReadPreference;
+var customVisionApi  = require('./customvision/api');
 var db = require('./mongo').connect();
 var fs = require('fs');
-
 var gridfs;
 var gfs;
 db.then(resp=> {
@@ -27,8 +27,8 @@ function get(req,res){
 	});
 }
 function create(req,res){
-	const { name, score, image_ref} = req.body;
-	const patient = new Patient({name,score,image_ref})
+	const { name, email, image_ref} = req.body;
+	const patient = new Patient({name,email,image_ref})
 	patient
 	.save()
 	.then(() => {
@@ -38,13 +38,14 @@ function create(req,res){
 	})
 }
 function update(req,res){
-	const {_id, name, score, image_ref} = req.body;
-
+	const {_id, name, email, image_ref,cv_result} = req.body;
+	console.log(cv_result)
 	Patient.findOne({_id})
 	.then(patient => {
 		patient.name = name;
-		patient.score = score;
+		patient.email = email;
 		patient.image_ref = image_ref;
+		patient.cv_result = cv_result;
 		patient.save().then(res.json(patient))
 	})
 	.catch(err => {
@@ -84,12 +85,20 @@ function storeImage(req,res){
 function getImage(req,res){
 	  const {_id} = req.params;
 	  	Attachment.readById(_id, function(error, content){
-	  		res.setHeader('Content-Type', 'image/png');
+	  		res.setHeader('Content-Type', 'image/*');
 	  		res.send(content)
 		});
 }
-
+function analyzeImage(req,res) {
+		const {_id} = req.params;
+		var url = 'http://medicsupply.net/wp-content/uploads/2016/07/catarata.jpg'
+	  	Attachment.readById(_id, function(error, content){
+	  		customVisionApi.analyzeUrl(url).then(r => {				res.json(r)			});
+	  		//customVisionApi.analyzeData(content).then(r => {		res.json(r)			});
+		});
+	
+}
 
 module.exports = {
-	get,create, update, destroy,storeImage , getImage
+	get,create, update, destroy,storeImage , getImage,analyzeImage 
 };

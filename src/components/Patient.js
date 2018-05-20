@@ -16,19 +16,26 @@ return (
 	  <Card  >
 	  <CardContent>
       <Grid container md={12}>
-          <Grid item md={6}>
-          <Typography variant="headline" component="h2" >
+          <Grid item md={9}>
            <IconButton  aria-label="Add an alarm"  onClick={()=> props.onSelect(props.patient)}>
               <Icon>remove_red_eye</Icon>
-          </IconButton>  <IconButton  aria-label="Add an alarm"  onClick={(e)=> props.onDelete(e, props.patient)}> 
+          </IconButton>  
+          <IconButton  aria-label="Add an alarm"  onClick={(e)=> props.onDelete(e, props.patient)}> 
               <Icon size="small" >delete</Icon>
-          </IconButton> {props.patient.name}           
+          </IconButton>
+          <Typography variant="headline" component="h2" >
+           {props.patient.name}           
+          </Typography>
+           <Typography  color="textSecondary">
+          {props.patient.email}  
           </Typography>
          <Typography  color="textSecondary">
               {props.patient.image_ref ?<img  height={100}  src={'/api/images/' +  props.patient.image_ref }/> : ''} 
           </Typography>
           </Grid>
-          <Grid item md={6}>
+          <Grid item md={3}>
+
+          { props.patient.cv_result}
           <Typography variant="headline" component="h2" >
             Resultado Custom Vision
           </Typography>
@@ -42,7 +49,6 @@ return (
      </Grid>
         </CardContent>
 		    <CardActions>
-         
           <Button size="small" onClick={(e)=> props.onAnalysisRequest(e, props.patient)}> Analise Com Custom Vision</Button>
         </CardActions>
 		</Card>
