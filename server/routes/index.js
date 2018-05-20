@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var patientService = require('../PatientService')
-var Gridfs = require('gridfs-stream');
-var multiparty = require('connect-multiparty')();
+
 
 router.get('/patients', function(req, res, next) {
   patientService.get(req,res);
@@ -16,9 +15,11 @@ router.put('/patient', function(req, res, next) {
 router.delete('/patient/:id', function(req, res, next) {
   patientService.destroy(req,res);
 });
-
-router.post('/upload/:id', multiparty, function(req, res){
-	patientService.storeImage(req,res);
+router.post('/images',  function(req, res){
+  patientService.storeImage(req,res);
 });
+router.get("/images/:_id", function(req, res){ 
+  patientService.getImage(req,res);
+ });
 
 module.exports = router;

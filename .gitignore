@@ -24,3 +24,4 @@ yarn-error.log*
 
 #Secret Stuff
 environment/environment.js
+package-lock.json

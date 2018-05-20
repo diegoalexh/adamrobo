@@ -8,38 +8,28 @@ import moment from 'moment'
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-
+import Typography from '@material-ui/core/Typography';
 const EditPatient = (props) => { 
 
 if (props.selectedPatient){
-    return (
+  return (
 	<div style={{textAlign: 'center'}}> 
-
       <Card style={{padding: '16px'}}>
-		    <FormControl >
+          <Typography variant="title" color="inherit" >
+           {props.selectedPatient._id ? 'Editar Teste' : 'Adicionar Teste'} 
+          </Typography>
+		    <FormControl style={{margin: '16px'}}>
           <InputLabel htmlFor="name">Nome</InputLabel>
           <Input name="name"  value={props.selectedPatient.name}  onChange={props.onChange} />
         </FormControl>
-        <FormControl >
+        <FormControl style={{margin: '16px'}} >
           <InputLabel htmlFor="score">Score</InputLabel>
           <Input name="score" value={props.selectedPatient.score} onChange={props.onChange} />
         </FormControl>
-         <FormControl disabled >
-          <InputLabel htmlFor="score">Imagem</InputLabel>
-          <Input name="image" value={props.selectedPatient.image ? 'Capurada!' : ''}  />
-        </FormControl>
-        <input
-        accept="image/*"
-        style={{display: 'none'}}
-        id="raised-button-file"
-        multiple
-        type="file"
-      />
-      <CardActions style={{textAlign: 'center'}} disableActionSpacing>
-		<Button onClick={()=> props.onSave(props.selectedPatient)} color="primary" variant="raised"> Salvar</Button>
+          {props.selectedPatient.image ?  <img  height={100}  src={ props.selectedPatient.image }/> : <img  height={100}  src={'http://localhost:3001/api/images/' +  props.selectedPatient.image_ref }/> } 
+		<br/><br/><Button onClick={()=> props.onSave(props.selectedPatient)} color="primary" variant="raised">  {props.selectedPatient._id ? 'Atualizar' : 'Salvar'} </Button>
 		<Button onClick={()=> props.onCancel()}> Cancelar</Button>
-</CardActions>
-    <small>{ moment(props.selectedPatient.created).format('h:mm:ss a')  }</small>
+  
 </Card>
       
 	</div>

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const patientSchema = new Schema ({
 	name: String,
 	score: Number,
-	image: String,
+	image_ref: String,
 	created:  { type: Date, default: Date.now }
 });
 

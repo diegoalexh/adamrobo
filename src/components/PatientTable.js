@@ -56,19 +56,44 @@ handleDelete(event, patient){
 }
 handleSave(){
 	let patients = this.state.patients;
+	let selectedPatient = this.state.selectedPatient;
 	if(this.state.adding){
-		heroesAPI.create(this.state.selectedPatient).then(patient => {
-			patients.push(patient)
-			this.setState({
-				patients : patients,
-				adding: false,
-				selectedPatient: null
+		if(selectedPatient.image){
+			heroesAPI.storeImage(selectedPatient).then(image=>{
+					selectedPatient['image_ref'] = image._id
+					heroesAPI.create(selectedPatient).then(p => {
+						patients.push(p)
+						this.setState({
+							patients : patients,
+							adding: false,
+							selectedPatient: null
+						})
+					})
 			})
-		})
+		}else{
+					heroesAPI.create(selectedPatient).then(p => {
+						patients.push(p)
+						this.setState({
+							patients : patients,
+							adding: false,
+							selectedPatient: null
+						})
+					})
+		}
 	}else{
-		heroesAPI.update(this.state.selectedPatient).then(patient => {
-			this.setState({selectedPatient: null})
+		if(selectedPatient.image){
+			heroesAPI.storeImage(selectedPatient).then(image=>{
+				selectedPatient['image_ref'] = image._id
+				selectedPatient['image']=null;
+				heroesAPI.update(selectedPatient).then(p => {
+					this.setState({	selectedPatient: null})
+				})
+			});
+		}
+		heroesAPI.update(selectedPatient).then(p => {
+				this.setState({	selectedPatient: null})
 		})
+		
 	}
 	
 
@@ -109,30 +134,31 @@ render(){
 
 	return (
 				<Grid container style={{padding: '12px'}}>
-						
-				<WebcamCapture onImageReady={this.handleImageReady} original={this.state.selectedPatient}/>
-				<Button color="primary" onClick={this.handleEnableAddMode}> Novo Teste</Button>
-				<Grid container className={styles.root} spacing={16}>
-				<Grid item xs={12} md={6}>
-				<EditPatient 
-					onCancel={this.handleCancel}
-					onChange={this.handleChange} 
-					selectedPatient={this.state.selectedPatient}
-					onSave={this.handleSave}/>
-					 </Grid>
-       					 <Grid item xs={12} md={6}>
-							{
-								this.state.patients.map((patient,index) =>{
-									return <Patient key={index}
-									patient={patient} 
-									onSelect={this.handleSelect} 
-									onDelete={this.handleDelete}
-									onAnalysisRequest={this.handleAnalysisRequest}
-									/>
-								} )			
-							}
-					 	</Grid>
-					 </Grid>
+				<Grid item md={3}>
+					<WebcamCapture onImageReady={this.handleImageReady} />
+					<Button style={{width: '100%'}} color="secondary" variant="raised" onClick={this.handleEnableAddMode}> Novo Teste</Button>
+				</Grid>
+				<Grid item xs={12} md={9}>
+								<EditPatient 
+								onCancel={this.handleCancel}
+								onChange={this.handleChange} 
+								selectedPatient={this.state.selectedPatient}
+								onSave={this.handleSave}/>
+				</Grid>
+					<Grid container className={styles.root} spacing={16}>
+	       					 <Grid item xs={12} md={12}>
+								{
+									this.state.patients.map((patient,index) =>{
+										return <Patient key={index}
+										patient={patient} 
+										onSelect={this.handleSelect} 
+										onDelete={this.handleDelete}
+										onAnalysisRequest={this.handleAnalysisRequest}
+										/>
+									} )			
+								}
+						 	</Grid>
+					</Grid>
 				</Grid>
 	)
 }

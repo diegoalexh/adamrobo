@@ -23,15 +23,12 @@ return (
           </IconButton>  <IconButton  aria-label="Add an alarm"  onClick={(e)=> props.onDelete(e, props.patient)}> 
               <Icon size="small" >delete</Icon>
           </IconButton> {props.patient.name}           
-        
           </Typography>
          <Typography  color="textSecondary">
-          {props.patient.image ?<img  height={100}  src={props.patient.image}/> : ''} 
+              {props.patient.image_ref ?<img  height={100}  src={'/api/images/' +  props.patient.image_ref }/> : ''} 
           </Typography>
           </Grid>
-
           <Grid item md={6}>
-
           <Typography variant="headline" component="h2" >
             Resultado Custom Vision
           </Typography>

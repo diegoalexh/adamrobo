@@ -50,7 +50,24 @@ const heroesAPI={
 			.then(result => result.json())
 			.then(json=>{resolve(json)})
 			.catch(err=> {reject(err)});
-		});}
+		});},
+
+	storeImage(patient){
+		return new Promise((resolve,reject)=> {
+			fetch(`${baseUrl}/images`,{
+					method: 'POST',
+					body: JSON.stringify({ "image" : patient.image}),
+					headers: {
+						'Content-Type': 'application/json'
+					}
+			})
+			.then(result => result.json())
+			.then(json=>{resolve(json)})
+			.catch(err=> {reject(err)});
+		});
+
+
+	},
 
 	
 }

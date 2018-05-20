@@ -1,9 +1,19 @@
 const Patient = require('./PatientModel');
-
 const ReadPreference = require('mongodb').ReadPreference;
-
-
 var db = require('./mongo').connect();
+var fs = require('fs');
+
+var gridfs;
+var gfs;
+db.then(resp=> {
+	gridfs = require('mongoose-gridfs')({
+	  collection:'files',
+	  model:'Attachment',
+	  mongooseConnection: resp.db
+	});
+	//obtain a model
+	Attachment = gridfs.model;
+})
 
 function get(req,res){
 	const docquery = Patient.find({}).read(ReadPreference.NEAREST);
@@ -17,8 +27,8 @@ function get(req,res){
 	});
 }
 function create(req,res){
-	const { name, score, image} = req.body;
-	const patient = new Patient({name,score,image})
+	const { name, score, image_ref} = req.body;
+	const patient = new Patient({name,score,image_ref})
 	patient
 	.save()
 	.then(() => {
@@ -28,13 +38,13 @@ function create(req,res){
 	})
 }
 function update(req,res){
-	const {_id, name, score, image} = req.body;
+	const {_id, name, score, image_ref} = req.body;
 
 	Patient.findOne({_id})
 	.then(patient => {
 		patient.name = name;
 		patient.score = score;
-		patient.image = image;
+		patient.image_ref = image_ref;
 		patient.save().then(res.json(patient))
 	})
 	.catch(err => {
@@ -54,33 +64,32 @@ function destroy(req,res){
 }
 
 function storeImage(req,res){
-   var mongoDriver = db.mongo;
-   console.log(db)
-   var gfs = new Gridfs(db, mongoDriver);
-   var writestream = gfs.createWriteStream({
-     filename: req.files.file.name,
-     mode: 'w',
-     content_type: req.files.file.mimetype,
-     metadata: req.body
-   });
-   fs.createReadStream(req.files.file.path).pipe(writestream);
-   writestream.on('close', function(file) {
-      User.findById(req.params.id, function(err, user) {
-        // handle error
-        user.file = file._id;
-        user.save(function(err, updatedUser) {
-          // handle error
-          return res.json(200, updatedUser)
-        })
-      });
-      fs.unlink(req.files.file.path, function(err) {
-        // handle error
-        console.log('success!')
-      });
-   });
+		const { image } = req.body;
+		let base64Image = image.split(';base64,').pop();
+		var filename = 'src/uploads/image.png';
+		fs.writeFile(filename, base64Image, {encoding: 'base64'}, function(err, file) {
+   			 console.log('File created');
+   			 Attachment.write({
+					filename:filename,
+					},
+					fs.createReadStream(filename),
+						function(error, savedAttachment){
+							 res.json(savedAttachment )
+					 	});
+		});
+		
+	
+}
+
+function getImage(req,res){
+	  const {_id} = req.params;
+	  	Attachment.readById(_id, function(error, content){
+	  		res.setHeader('Content-Type', 'image/png');
+	  		res.send(content)
+		});
 }
 
 
 module.exports = {
-	get,create, update, destroy
+	get,create, update, destroy,storeImage , getImage
 };
