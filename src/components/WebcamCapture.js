@@ -35,6 +35,19 @@ export default class WebcamCapture extends React.Component {
                   width={350}
                 />
                 <Button color="primary" onClick={this.handleSnap} variant="raised" className="capture">Capturar Imagem</Button>
+
+                 <input
+        accept="image/*"
+        style={{display: 'none'}}
+        id="raised-button-file"
+        multiple
+        type="file"
+      />
+      <label htmlFor="raised-button-file">
+        <Button variant="raised" component="span">
+          Carregar Imagem
+        </Button>
+      </label>
                 </div> 
     );
   }
