@@ -26,7 +26,8 @@ if (props.selectedPatient){
           <InputLabel htmlFor="score">Email</InputLabel>
           <Input name="email" value={props.selectedPatient.email} onChange={props.onChange} />
         </FormControl>
-          {props.selectedPatient.image ?  <img  height={100}  src={ props.selectedPatient.image }/> : (props.selectedPatient.image_ref ? <img  height={100}  src={'http://localhost:3001/api/images/' +  props.selectedPatient.image_ref }/> : '') } 
+          <br/>
+          {props.selectedPatient.image ?  <img  height={100}  src={ props.selectedPatient.image }/> : (props.selectedPatient.image_ref ? <img  height={100}  src={'/api/images/' +  props.selectedPatient.image_ref }/> : '') } 
 		<br/><br/><Button onClick={()=> props.onSave(props.selectedPatient)} color="primary" variant="raised">  {props.selectedPatient._id ? 'Atualizar' : 'Salvar'} </Button>
 		<Button onClick={()=> props.onCancel()}> Cancelar</Button>
   

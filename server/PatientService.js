@@ -93,8 +93,8 @@ function analyzeImage(req,res) {
 		const {_id} = req.params;
 		var url = 'http://medicsupply.net/wp-content/uploads/2016/07/catarata.jpg'
 	  	Attachment.readById(_id, function(error, content){
-	  		customVisionApi.analyzeUrl(url).then(r => {				res.json(r)			});
-	  		//customVisionApi.analyzeData(content).then(r => {		res.json(r)			});
+	  		//customVisionApi.analyzeUrl(url).then(r => {				res.json(r)			});
+	  		customVisionApi.analyzeData(content).then(r => {		res.json(r)			});
 		});
 	
 }

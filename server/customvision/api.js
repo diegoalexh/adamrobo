@@ -1,4 +1,6 @@
-const baseUrl = 'https://brazilsouth.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=Categories&language=en';
+const baseUrl = 'https://southcentralus.api.cognitive.microsoft.com/customvision/v2.0/Prediction/3c3d4e5f-ceac-466e-864d-69d22936e1b7/image?iterationId=7753bb99-85f5-40cf-8d8d-5c3889aa4a50';
+//const baseUrl = 'https://brazilsouth.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=Categories&language=en';
+
 var fetch = require('fetch-everywhere');
 const env = require('../environment/environment');
 
@@ -11,7 +13,7 @@ const customVisionApi = {
 					body: JSON.stringify({"url": image_url}),
 					headers: {
 						'Content-Type': 'application/json',
-						'Ocp-Apim-Subscription-Key' : `${env.OcpApimSubscriptionKey}`
+						'Prediction-Key' : `${env.predictionkey}`,
 					}
 			})
 			.then(result => result.json())
@@ -27,7 +29,8 @@ const customVisionApi = {
 					body: data,
 					headers: {
 						'Content-Type': 'application/octet-stream',
-						'Ocp-Apim-Subscription-Key' : `${env.OcpApimSubscriptionKey}`
+						//'Ocp-Apim-Subscription-Key' : `${env.OcpApimSubscriptionKey}`,
+						'Prediction-Key' : `${env.predictionkey}`,
 					}
 			})
 			.then(result => result.json())

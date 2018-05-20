@@ -1,6 +1,7 @@
 import React from 'react';
 import Webcam from 'react-webcam';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 export default class WebcamCapture extends React.Component {
   setRef = (webcam) => {
     this.webcam = webcam;
@@ -22,7 +23,10 @@ export default class WebcamCapture extends React.Component {
  
   render() {
     return (
-                <div style={{textAlign:'center', position:'relative', margin: '16px'}}>
+                <div style={{textAlign:'center', position:'relative', marginBottom: '16px', marginRight: '16px'}}>
+                <Typography variant="title" color="inherit" >
+                  Camera de Captura
+               </Typography>
                   <Webcam className="video"
                   audio={false}
                   height={350}
