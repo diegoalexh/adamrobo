@@ -5,6 +5,7 @@ var db = require('./mongo').connect();
 var fs = require('fs');
 var gridfs;
 var gfs;
+var path= require('path')
 db.then(resp=> {
 	gridfs = require('mongoose-gridfs')({
 	  collection:'files',
@@ -67,7 +68,8 @@ function destroy(req,res){
 function storeImage(req,res){
 		const { image } = req.body;
 		let base64Image = image.split(';base64,').pop();
-		var filename = 'uploads/image.png';
+		var filename = path.resolve(__dirname, '../uploads/image.png');
+
 		fs.writeFile(filename, base64Image, {encoding: 'base64'}, function(err, file) {
    			 console.log('File created');
    			 Attachment.write({
@@ -106,7 +108,7 @@ function getImage(req,res){
 }
 function analyzeImage(req,res) {
 		const {_id} = req.params;
-		var url = 'http://medicsupply.net/wp-content/uploads/2016/07/catarata.jpg'
+		//var url = 'http://medicsupply.net/wp-content/uploads/2016/07/catarata.jpg'
 	  	Attachment.readById(_id, function(error, content){
 	  		//customVisionApi.analyzeUrl(url).then(r => {				res.json(r)			});
 	  		customVisionApi.analyzeData(content).then(r => {		res.json(r)			});
