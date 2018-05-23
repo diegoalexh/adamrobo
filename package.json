@@ -19,8 +19,10 @@
     "salad-ui.chart": "^1.1.55"
   },
   "devDependencies": {
+    "file-loader": "^1.1.11",
     "nodemon": "^1.17.4",
-    "react-scripts": "1.0.10"
+    "react-scripts": "1.0.10",
+    "url-loader": "^1.0.1"
   },
   "scripts": {
     "start": "concurrently \"react-scripts start\" \"nodemon server/server.js\"",

@@ -195,11 +195,13 @@ render(){
 
 	return (
 				<Grid container style={{padding: '12px'}} justify="center" alignItems="center">
-				
+					<Grid direction="row" item md={2} style={{textAlign: 'center'}} >
+						<img src={process.env.PUBLIC_URL + '/logo.png'} alt="logo" width="200px"/>
+					</Grid>
 					<Grid item md={4}  >
 						<WebcamCapture onImageReady={this.handleImageReady}  onImageLoaded={this.handleImageLoaded}/>
 					</Grid>
-					<Grid item xs={12} md={8} style={{textAlign: 'center'}} >
+					<Grid item xs={12} md={6} style={{textAlign: 'center'}} >
 
 							{this.state.selectedPatient ? <EditPatient 
 									miniature={this.state.miniature}
@@ -208,6 +210,7 @@ render(){
 									selectedPatient={this.state.selectedPatient}
 									onSave={this.handleSave}/> : <Button color="secondary" variant="raised" onClick={this.handleEnableAddMode}> Novo Teste</Button>}
 					</Grid>
+					
 		       		<Grid item xs={12} md={9}>
 							{
 			this.state.patients.map((patient,index) =>{
@@ -215,9 +218,6 @@ render(){
 			})	
 
 		}
-					</Grid>
-					<Grid item xs={12} md={3}>
-							<iframe width="100%" height="400px" src='https://webchat.botframework.com/embed/ADAMROBOBOT?s=ReHSQLqmomI.cwA.cTA.l51-ph2NY35mE9oM9ZDa1tkReg2OWMHoJ8RuAOnYjl4'></iframe>
 					</Grid>
 					 <Snackbar
 				          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
