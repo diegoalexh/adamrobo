@@ -36,6 +36,7 @@ constructor(){
 	this.handleEnableAddMode = this.handleEnableAddMode.bind(this)
 	this.handleImageReady = this.handleImageReady.bind(this)
 	this.handleAnalysisRequest = this.handleAnalysisRequest.bind(this)
+	this.handleImageLoaded = this.handleImageLoaded.bind(this)
 }
 
 handleAnalysisRequest(event, patient){
@@ -71,7 +72,23 @@ handleDelete(event, patient){
 handleSave(){
 	let patients = this.state.patients;
 	let selectedPatient = this.state.selectedPatient;
-	if(this.state.adding){
+
+	if(selectedPatient.imageblob){
+		console.log("Sending image blob")
+		heroesAPI.storeBlob(selectedPatient).then(image=>{
+					selectedPatient['image_ref'] = image._id
+					heroesAPI.create(selectedPatient).then(p => {
+						patients.push(p)
+						this.setState({
+							patients : patients,
+							adding: false,
+							selectedPatient: null
+						})
+					})
+			})
+	}else{
+		console.log("Sending image ref")
+		if(this.state.adding){
 		if(selectedPatient.image){
 			heroesAPI.storeImage(selectedPatient).then(image=>{
 					selectedPatient['image_ref'] = image._id
@@ -109,6 +126,11 @@ handleSave(){
 		})
 		
 	}
+
+		
+	}
+
+	
 	
 
 }
@@ -129,15 +151,27 @@ handleCancel(){
 }
 
 handleImageReady(imgSrc){
-	if(this.state.selectedPatient){
-			let selectedPatient = this.state.selectedPatient;
-			selectedPatient['image'] = imgSrc;
-			this.setState({selectedPatient: selectedPatient})
-	}else{
-    		this.setState({ open_snack: true });
+	console.log("Image Captured From Camera")
+	console.log(imgSrc)
+	if(!this.state.selectedPatient){
+		this.state.selectedPatient = { name: '', email: '',image:null}
+		 this.setState({ adding: true });
 	}
+	let selectedPatient = this.state.selectedPatient;
+	selectedPatient['image'] = imgSrc;
+	this.setState({selectedPatient: selectedPatient})
 }
-
+handleImageLoaded(imgPath){
+	console.log("Image Loaded Manually")
+	console.log(imgPath)
+	if(!this.state.selectedPatient){
+		this.state.selectedPatient = { name: '', email: '',image:null}
+		 this.setState({ adding: true });
+	}
+			let selectedPatient = this.state.selectedPatient;
+			selectedPatient['imageblob'] = imgPath;
+			this.setState({selectedPatient: selectedPatient})
+}
 componentDidMount(){
 	heroesAPI.get().then(json => {
 		this.setState({patients: json})
@@ -155,7 +189,7 @@ render(){
 				<Grid container style={{padding: '12px'}} justify="center" alignItems="center">
 				
 					<Grid item md={4}  >
-						<WebcamCapture onImageReady={this.handleImageReady} />
+						<WebcamCapture onImageReady={this.handleImageReady}  onImageLoaded={this.handleImageLoaded}/>
 					</Grid>
 					<Grid item xs={12} md={8} style={{textAlign: 'center'}} >
 
@@ -165,13 +199,16 @@ render(){
 									selectedPatient={this.state.selectedPatient}
 									onSave={this.handleSave}/> : <Button color="secondary" variant="raised" onClick={this.handleEnableAddMode}> Novo Teste</Button>}
 					</Grid>
-		       		<Grid item xs={12} md={12}>
+		       		<Grid item xs={12} md={9}>
 							{
 			this.state.patients.map((patient,index) =>{
 			return <Patient key={index}	patient={patient} onSelect={this.handleSelect} onDelete={this.handleDelete} onAnalysisRequest={this.handleAnalysisRequest}	/>
 			})	
 
 		}
+					</Grid>
+					<Grid item xs={12} md={3}>
+							
 					</Grid>
 					 <Snackbar
 				          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}

@@ -52,7 +52,7 @@ return (
             width={100}
             height={100}
             strokeWidth={7}
-            percent={parseFloat(Math.round(item.probability * 100) / 100).toFixed(3)}
+            percent={parseFloat(Math.round(item.probability * 100)).toFixed(3)}
           /><br/>{ item.tagName} <br/>{
             }</Grid> 
             })  : ''  

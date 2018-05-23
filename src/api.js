@@ -1,5 +1,5 @@
 const baseUrl = '/api';
-
+const restler = require('restler');
 const heroesAPI={
 	get(){
 		return new Promise((resolve,reject)=> {
@@ -67,6 +67,20 @@ const heroesAPI={
 			.catch(err=> {reject(err)});
 		});
 
+
+	},
+	storeBlob(patient){
+		return new Promise((resolve,reject)=> {
+		const data = new FormData();
+		data.append('file', patient.imageblob);
+		fetch(`${baseUrl}/upload`, {
+        	method: 'POST',
+        	body: data,
+    	})
+			.then(result => result.json())
+			.then(json=>{resolve(json)})
+			.catch(err=> {reject(err)});
+		});
 
 	},
 	sendFormAnalysis(patient){

@@ -67,7 +67,7 @@ function destroy(req,res){
 function storeImage(req,res){
 		const { image } = req.body;
 		let base64Image = image.split(';base64,').pop();
-		var filename = 'src/uploads/image.png';
+		var filename = 'uploads/image.png';
 		fs.writeFile(filename, base64Image, {encoding: 'base64'}, function(err, file) {
    			 console.log('File created');
    			 Attachment.write({
@@ -78,10 +78,24 @@ function storeImage(req,res){
 							 res.json(savedAttachment )
 					 	});
 		});
+	   fs.unlinkSync(filename);
 		
 	
 }
-
+function storeImageBlob(res, filePath){
+   		Attachment.write({
+					filename:filePath,
+					},
+					fs.createReadStream(filePath),
+						function(error, savedAttachment){
+							console.log(error)
+							 res.json(savedAttachment )
+		});
+		console.log(filePath)
+		fs.unlinkSync(filePath);
+		
+	
+}
 function getImage(req,res){
 	  const {_id} = req.params;
 	  	Attachment.readById(_id, function(error, content){
@@ -100,5 +114,5 @@ function analyzeImage(req,res) {
 }
 
 module.exports = {
-	get,create, update, destroy,storeImage , getImage,analyzeImage 
+	get,create, update, destroy,storeImage , getImage,analyzeImage ,storeImageBlob
 };

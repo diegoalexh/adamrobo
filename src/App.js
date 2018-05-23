@@ -47,8 +47,8 @@ class App extends Component {
           </Typography>
         
         </Toolbar>
-      </AppBar>
-          
+        </AppBar>
+        
       	<PatientTable/>
       </div>
      </MuiThemeProvider>
