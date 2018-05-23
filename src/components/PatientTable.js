@@ -56,7 +56,7 @@ handleAnalysisRequest(event, patient){
 
 
 handleEnableAddMode(){
-	this.setState({adding: true, selectedPatient: { name: '', email: '',image:null}})
+	this.setState({miniature: null, adding: true, selectedPatient: { name: '', email: '',image:null}})
 }
 handleDelete(event, patient){
 	console.log(patient._id)
