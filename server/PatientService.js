@@ -76,9 +76,10 @@ function storeImage(req,res){
 					fs.createReadStream(filename),
 						function(error, savedAttachment){
 							 res.json(savedAttachment )
+							 fs.unlinkSync(filename);
 					 	});
 		});
-	   fs.unlinkSync(filename);
+	   
 		
 	
 }
