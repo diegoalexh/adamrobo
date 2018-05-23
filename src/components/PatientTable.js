@@ -168,9 +168,17 @@ handleImageLoaded(imgPath){
 		this.state.selectedPatient = { name: '', email: '',image:null}
 		 this.setState({ adding: true });
 	}
-			let selectedPatient = this.state.selectedPatient;
-			selectedPatient['imageblob'] = imgPath;
-			this.setState({selectedPatient: selectedPatient})
+
+	let selectedPatient = this.state.selectedPatient;
+
+	let reader = new FileReader();
+    reader.onload = (e) => {
+		selectedPatient['imageblob'] = imgPath;
+     	selectedPatient['image'] = e.target.result
+     	this.setState({selectedPatient: selectedPatient})
+    };
+    reader.readAsDataURL(imgPath);
+
 }
 componentDidMount(){
 	heroesAPI.get().then(json => {
