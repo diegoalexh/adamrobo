@@ -159,11 +159,12 @@ handleImageReady(imgSrc){
 	}
 	let selectedPatient = this.state.selectedPatient;
 	selectedPatient['image'] = imgSrc;
-	this.setState({selectedPatient: selectedPatient})
+	this.setState({miniature: null, selectedPatient: selectedPatient})
 }
 handleImageLoaded(imgPath){
 	console.log("Image Loaded Manually")
 	console.log(imgPath)
+	this.state.selectedPatient = {image:null}
 	if(!this.state.selectedPatient){
 		this.state.selectedPatient = { name: '', email: '',image:null}
 		 this.setState({ adding: true });
@@ -174,8 +175,7 @@ handleImageLoaded(imgPath){
 	let reader = new FileReader();
     reader.onload = (e) => {
 		selectedPatient['imageblob'] = imgPath;
-     	selectedPatient['image'] = e.target.result
-     	this.setState({selectedPatient: selectedPatient})
+     	this.setState({selectedPatient: selectedPatient, miniature: e.target.result})
     };
     reader.readAsDataURL(imgPath);
 
@@ -202,6 +202,7 @@ render(){
 					<Grid item xs={12} md={8} style={{textAlign: 'center'}} >
 
 							{this.state.selectedPatient ? <EditPatient 
+									miniature={this.state.miniature}
 									onCancel={this.handleCancel}
 									onChange={this.handleChange} 
 									selectedPatient={this.state.selectedPatient}
@@ -216,7 +217,7 @@ render(){
 		}
 					</Grid>
 					<Grid item xs={12} md={3}>
-							
+							<iframe width="100%" height="400px" src='https://webchat.botframework.com/embed/ADAMROBOBOT?s=ReHSQLqmomI.cwA.cTA.l51-ph2NY35mE9oM9ZDa1tkReg2OWMHoJ8RuAOnYjl4'></iframe>
 					</Grid>
 					 <Snackbar
 				          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}

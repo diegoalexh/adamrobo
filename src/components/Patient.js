@@ -69,15 +69,15 @@ return (
           </div>
           </Grid>
 
-
-          <Grid item md={3} style={{display:  props.patient.cv_result.length === 0 ? '': 'none',textAlign: 'center'}}  justify="center" alignItems="center" >
+          {props.patient.image_ref ?  <Grid item md={3} style={{display:  props.patient.cv_result.length === 0 ? '': 'none',textAlign: 'center'}}  justify="center" alignItems="center" >
           <IconButton  aria-label="Delete"  onClick={(e)=> props.onAnalysisRequest(e, props.patient)}> 
               <Icon>remove_red_eye</Icon>
             </IconButton> 
                <Typography variant="textSecondary" >
             Analisar com Custom Vision
           </Typography>
-          </Grid>
+          </Grid> : ''}
+         
         </Grid>
         </CardContent>
 		    <CardActions>
