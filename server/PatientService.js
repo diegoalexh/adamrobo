@@ -8,7 +8,7 @@ var gfs;
 var path= require('path')
 db.then(resp=> {
 	gridfs = require('mongoose-gridfs')({
-	  collection:'files',
+	  collection:'filesdb',
 	  model:'Attachment',
 	  mongooseConnection: resp.db
 	});

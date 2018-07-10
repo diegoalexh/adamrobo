@@ -4,10 +4,10 @@ mongoose.Promise = global.Promise;
 
 function connect(){
 
-	return mongoose.connect(`mongodb://${env.dbName}.documents.azure.com:${env.port}/${env.dbName}?ssl=true`, {
+	return mongoose.connect(`mongodb://${env.dbHost}.documents.azure.com:${env.port}/${env.dbName}?ssl=true`, {
     auth: {
-      user: `${env.dbName}`,
-      password: `${env.key}`
+      user: `${env.dbUser}`,
+      password: `${env.dbPass}`
     }
   })
   .then(resp => {
